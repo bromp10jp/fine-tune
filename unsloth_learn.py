@@ -23,6 +23,7 @@ else:
 print(f"compute_dtype: {compute_dtype} use_bf16: {use_bf16} use_fp16: {use_fp16}")
 
 # 4ビット動的量子化でモデルを読み込みます
+print(f"ベースモデル '{model_name}' を読み込み中...")
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = model_name,
     max_seq_length = max_seq_length,
@@ -33,7 +34,7 @@ model, tokenizer = FastLanguageModel.from_pretrained(
 # JSONLの各行が {instruction, context, response}
 # 例：{"instruction": "東京観光のお薦めは？","context": "あなたは観光ガイドです", "response": "メジャー処は浅草です。"}
 print("教師データのロード")
-dataset = load_dataset("json", data_files=DATA_FILE, split="train").train_test_split(test_size=0.1, seed=42)
+dataset = load_dataset("json", data_files=DATA_FILE, split="train").train_test_split(test_size=0.1) #, seed=42)
 print(dataset)
 
 def formatting_function(example):
