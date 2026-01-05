@@ -30,6 +30,8 @@ cat > /tmp/commandfile <<EOF
 cd $HOME
 echo "export OLLAMA_HOST=0.0.0.0:8080" >> .bashrc
 echo "export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True" >> .bashrc
+echo "export TUNE_DATA_FILE=nagasakiben.jsonl" >> .bashrc
+echo "export MODEL=unsloth/Llama-3.2-3B-Instruct" >> .bashrc
 sudo systemctl daemon-reload
 #sudo systemctl enable ollama
 #sudo systemctl restart ollama
@@ -50,7 +52,7 @@ cd $HOME
 python3 -m venv venv_llamacpp
 source venv_llamacpp/bin/activate
 pip install -U pip
-pip imstall awscli
+pip install awscli
 git clone https://github.com/ggml-org/llama.cpp
 cd llama.cpp
 pip install -r requirements.txt
@@ -60,7 +62,7 @@ cmake --build build -j4 --target llama-quantize
 #cd ~/tune-unsloth
 #python ../llama.cpp/convert_hf_to_gguf.py ./merged_model_full --outfile model-f16.gguf --outtype f16
 #~/llama.cpp/build/bin/llama-quantize ./model-f16.gguf ./model-q4_k_m.gguf Q4_K_M
-#aws s3 cp ./model-q4_k_m.gguf s3://oregon-up/
+#aws s3 cp ./model-q4_k_m.gguf s3://edu2-oregon-up/
 deactivate
 
 EOF
