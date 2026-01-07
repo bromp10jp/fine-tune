@@ -6,10 +6,10 @@ from trl import SFTTrainer, SFTConfig
 
 max_seq_length = 2048 # シーケンス長を設定
 model_name = os.environ.get('MODEL', 'unsloth/Llama-3.2-3B-Instruct')
-TUNE_DATA_FILE = os.environ.get('TUNE_DATA_FILE', 'sample_dataset.jsonl')
+TRAIN_DATASET = os.environ.get('TRAIN_DATASET', 'sample_dataset.jsonl')
 BASE = vars().get('BASE', './')
-DATA_FILE = BASE + TUNE_DATA_FILE
-save_dir = BASE + "finetuned_model"
+DATA_FILE = BASE + TRAIN_DATASET      # 教師データファイルパス
+save_dir = BASE + "finetuned_model"   # LoRAアダプター保存先
 
 # dtype の選定（CPUは考慮しない） ※新しいGPUだとbfloat16が使える（AWSだとg5やg6系）
 if torch.cuda.is_available() and torch.cuda.get_device_capability()[0] >= 8:
@@ -89,7 +89,7 @@ trainer = SFTTrainer(
         bf16 = use_bf16,
         output_dir = BASE + "outputs",
         report_to=[],
-        seed = 3407,                  # 乱数シード（指定しないとランダム）
+        #seed = 3407,                  # 乱数シード（指定しないとランダム）
     ),
 )
 

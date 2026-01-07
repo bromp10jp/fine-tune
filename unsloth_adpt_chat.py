@@ -4,11 +4,11 @@ from unsloth import FastLanguageModel
 from peft import PeftModel
 
 # --- 設定（必要に応じて変更してください） ---
-BASE = vars().get('BASE', './')
 model_name = os.environ.get('MODEL', 'unsloth/Llama-3.2-3B-Instruct')  # 元モデル
+BASE = vars().get('BASE', './')
 adapter_dir = BASE + "finetuned_model"  # LoRAアダプタの保存ディレクトリ
 max_seq_length = 2048
-max_new_tokens = 512
+max_new_tokens = 256
 temperature = 0.0
 top_p = 0.95
 
@@ -43,7 +43,7 @@ model.eval()
 print("モデル準備完了")
 
 # チャット履歴を保持するためのリスト
-system_prompt = "あなたは優秀なガイドです。"
+system_prompt = ""
 chat_history = [{"role": "system", "content": system_prompt}]
 
 print("終了するには 'exit' または 'quit' を入力してください。")

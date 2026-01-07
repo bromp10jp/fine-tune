@@ -9,15 +9,8 @@ BASE = vars().get('BASE', './')
 save_dir = BASE + "finetuned_model"
 merged_save_dir = BASE + "merged_model_full"
 
-if torch.cuda.is_available() and torch.cuda.get_device_capability()[0] >= 8:
-    compute_dtype = torch.bfloat16
-    use_bf16 = True
-    use_fp16 = False
-else:
-    compute_dtype = torch.float16
-    use_bf16 = False
-    use_fp16 = True
-print(f"compute_dtype: {compute_dtype} use_bf16: {use_bf16} use_fp16: {use_fp16}")
+compute_dtype = torch.float32 if not torch.cuda.is_available() else (torch.bfloat16 if torch.cuda.get_device_capability()[0] >= 8 else torch.float16)
+print(f"compute_dtype: {compute_dtype}")
 
 print("=== 完全なマージ処理を開始 ===")
 
