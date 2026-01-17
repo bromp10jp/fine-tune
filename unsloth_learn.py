@@ -34,7 +34,7 @@ model, tokenizer = FastLanguageModel.from_pretrained(
 # JSONLの各行が {instruction, context, response}
 # 例：{"instruction": "東京観光のお薦めは？","context": "あなたは観光ガイドです", "response": "メジャー処は浅草です。"}
 print("教師データのロード")
-dataset = load_dataset("json", data_files=DATA_FILE, split="train").train_test_split(test_size=0.1) #, seed=42)
+dataset = load_dataset("json", data_files=DATA_FILE, split="train").train_test_split(test_size=0.1, seed=42)
 print(dataset)
 
 def formatting_function(example):
@@ -54,7 +54,7 @@ dataset = dataset.map(formatting_function)
 model = FastLanguageModel.get_peft_model(
     model,
     r=16,               # LoRAのランク（低い：メモリ節約、高い：性能向上、デフォルトは16）
-    lora_alpha=32,      # LoRAのスケーリングファクター（目安はrの2倍）
+    lora_alpha=32,      # LoRAの学習の強度を調整（目安はrの2倍程度で、小さいと元モデルの知識優先となる）
     lora_dropout=0.05,  # ドロップアウト率（過学習防止、0.0〜0.1程度が一般的）
     #target_modules=["q_proj","k_proj","v_proj","o_proj","gate_proj","up_proj","down_proj"],
     target_modules=["q_proj","v_proj"], # 軽量化のためQueryとValue層のみ。本来はAttentionとfeed-forward両方に適用するのが望ましい
@@ -89,7 +89,7 @@ trainer = SFTTrainer(
         bf16 = use_bf16,
         output_dir = BASE + "outputs",
         report_to=[],
-        #seed = 3407,                  # 乱数シード（指定しないとランダム）
+        seed = 3407,                  # 乱数シード（指定しないとランダム）
     ),
 )
 
